@@ -26,27 +26,19 @@ function App() {
     }
   }
 
-  async function requestAccount() {
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      console.log('Connected account:', accounts[0]);
-    } catch (error) {
-      console.error('User denied account access');
-    }
-  }
-
   async function sendEther(to, amount) {
     const accounts = await web3.eth.getAccounts();
     const from = accounts[0];
     const value = web3.utils.toWei(amount, 'ether');
 
     try {
-      const transactionHash = await web3.eth.sendTransaction({
+      const response = await web3.eth.sendTransaction({
         from,
         to,
         value
       });
-      toast.success("Transaction successful: " + transactionHash, { autoClose: 3000 });
+      console.log(response)
+      toast.success("Transaction successful: " + response.transactionHash, { autoClose: 3000 });
     } catch (error) {
       toast.error(error.message, { autoClose: 3000 });
     }
@@ -54,7 +46,6 @@ function App() {
 
   const handleBuy = () => {
     enableMetaMask();
-    requestAccount();
     sendEther('destination-address', product.price)
   };
 
